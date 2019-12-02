@@ -1,6 +1,7 @@
 __author__ = 'touchkiss'
 
 import os
+
 import MySQLdb
 from jinja2 import Environment, PackageLoader
 
@@ -11,17 +12,18 @@ class TableInfo(object):
         self.class_name = table_name.title().replace('_', '')
         self.title_name = table_name[0:1] + self.class_name[1:]
         self.columns = list({
-                                'column_name': column[0],
-                                'origin_type': self.get_origin_type(column[1]),
-                                'model_field_name': self.get_model_field_name(column[1]),
-                                'max_digits': self.get_max_digits(column[1]),
-                                'decimal_places': self.get_decimal_places(column[1]),
-                                'max_length': self.get_max_length(column[1]),
-                                'nullable': column[3],
-                                'verbose_name': column[8],
-                                'pri': column[4] == 'PRI',
-                                'filter_name': self.get_filter_name(column[1]),
+                                'column_name': column[0],  # 字段名
+                                'origin_type': self.get_origin_type(column[1]),  # 字段类型
+                                'model_field_name': self.get_model_field_name(column[1]),  # 字段在django models中的类型名
+                                'max_digits': self.get_max_digits(column[1]),  # decimal类型的长度
+                                'decimal_places': self.get_decimal_places(column[1]),  # decimal类型的精度
+                                'max_length': self.get_max_length(column[1]),  # varchar类型的长度
+                                'nullable': column[3],  # null
+                                'verbose_name': column[8],  # 备注
+                                'pri': column[4] == 'PRI',  # 是否主键
+                                'filter_name': self.get_filter_name(column[1]),  # 字段在django filter中的类型名
                                 'serializer_field_name': self.get_serializer_field_name(column[1])
+                                # 字段在django serializer中的类型名
                             } for column in columns)
 
     def get_origin_type(self, column_type):
@@ -34,7 +36,8 @@ class TableInfo(object):
             'varchar': 'CharField',
             'bigint': 'BigIntegerField',
             'decimal': 'DecimalField',
-            'float': 'FloatField'
+            'float': 'FloatField',
+            'date': 'DateField'
         }
         return type_map.get(type_name)
 
@@ -88,17 +91,10 @@ if __name__ == '__main__':
 
     rootpath = 'D:\\python_generated\\'
     env = Environment(loader=PackageLoader('generator', 'templates'))
-    tables = ['lm_bus_advlmadvinfo', 'lm_bus_advrule', 'lm_bus_advrulecontrol', 'lm_bus_auditadvrecord',
-              'lm_bus_auditchannelrecord', 'lm_bus_auditmediarecord', 'lm_bus_czadvday', 'lm_bus_czadvdaydetail',
-              'lm_bus_czlmadvday', 'lm_cfg_advactive', 'lm_cfg_lmadv', 'lm_cfg_lmadvactiveday', 'lm_cfg_lmadvcheat',
-              'lm_cfg_lmadvtaskactive', 'lm_cfg_lminfo', 'lm_channel_account', 'lm_channel_accountmonth',
-              'lm_channel_advday', 'lm_channel_advinfo', 'lm_channel_basicinfo', 'lm_channel_businfo',
-              'lm_channel_mediainfo', 'lm_notice_config', 'lm_notice_detail', 'lm_report_advday', 'lm_report_advgetday',
-              'lm_report_advgethour', 'lm_report_advhour', 'lm_report_taskday', 'lm_report_taskhour', 'lm_server_check',
-              'lm_sys_userinfo', 'lm_task_advdaycur', 'lm_task_channelinfo', 'lm_task_lmadvchannel',
-              'lm_task_lmadvdaycur', 'lm_task_systemdaycur', 'lm_task_systeminfo']
-    db = MySQLdb.connect("localhost", 'root', 'mouse', 'advlmtest', charset='utf8')
-    # 使用cursor()方法获取操作游标
+    #要生成的表名列表
+    tables = ['tb_user']
+    # 数据库信息
+    db = MySQLdb.connect("localhost", 'username', 'password', 'database', charset='utf8')
     cursor = db.cursor()
     tablesMap = {}
     ignoreGenerateTheseColumnsInVue = ['createtime', 'lastmodifytime']
