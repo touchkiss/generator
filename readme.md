@@ -17,11 +17,11 @@ class Info(models.Model):
     lmadvname = models.CharField(max_length=100, null=False, verbose_name='配置名称')
     lmadvsystemid = models.IntegerField(null=False, verbose_name='分类id')
     lmadvtoptype = models.CharField(max_length=100, null=True, verbose_name='顶级来源')
-    lmadvtype = models.CharField(max_length=100, null=False, verbose_name='广告类型')
+    lmadvtype = models.CharField(max_length=100, null=False, verbose_name='类型')
     lmadvitem = models.CharField(max_length=100, null=False, verbose_name='二级分类')
-    lmadvcode = models.CharField(max_length=100, null=False, verbose_name='广告编码')
+    lmadvcode = models.CharField(max_length=100, null=False, verbose_name='编码')
     lmadvimport = models.CharField(max_length=200, null=False, verbose_name='引用编码')
-    advtype = models.IntegerField(null=False, verbose_name='广告形式 0:3图;1:小图;2:大图')
+    advtype = models.IntegerField(null=False, verbose_name='形式 0:3图;1:小图;2:大图')
     ordernum = models.IntegerField(null=False, verbose_name='排序值')
     flagstatus = models.IntegerField(null=False, verbose_name='状态 0:停用;1:启用;2:已分配')
     flagpublic = models.IntegerField(null=False, verbose_name='是否公用 0:否;1:是;')
@@ -167,7 +167,7 @@ class InfoViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,mixins.Update
 ## Vue item|list 页面生成
 ### vue list
 will generate a vue page contains a table with all database columns and contains all search fields exclude primary key and createtime and lastmodifytime.
-将会生成vue的列表页面，搜索条件包含所有字段（除主键、createtime、lastmodifytime）的精确查找。table中包含所有字段，并包括所有字段的排序功能，最后一列包含修改和删除按钮。其中createtime、lastmodifytime可以在ignoreGenerateTheseColumnsInVue中配置
+将会生成vue的列表页面，搜索条件包含所有字段（除主键、createtime、lastmodifytime）的精确查找。table中包含所有字段，并包括所有字段的排序功能，最后一列包含修改和删除按钮。其中createtime、lastmodifytime可以在ignoreGenerateTheseColumnsInVue中配置。搜索条件默认区分text\number\date类型输入框。
 页面效果
 ![Image text](images/list.png)
 ```
@@ -177,9 +177,9 @@ will generate a vue page contains a table with all database columns and contains
       <el-main>
         <el-row :gutter="10">
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" class="search-item">
-            <label class="search-title">广告配置名称</label>
+            <label class="search-title">配置名称</label>
             <el-input
-              placeholder="请输入广告配置名称"
+              placeholder="请输入配置名称"
               prefix-icon="el-icon-search"
               v-model="queryInfoParams.lmadvname"
               maxlength="100"
@@ -194,11 +194,11 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">联盟分类id</label>
+            <label class="search-title">分类id</label>
             <el-input
               v-model="queryInfoParams.lmadvsystemid"
               type="number"
-              placeholder="请输入联盟分类id"
+              placeholder="请输入分类id"
               prefix-icon="el-icon-search"
               clearable
             ></el-input> </el-col
@@ -210,9 +210,9 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">联盟顶级来源</label>
+            <label class="search-title">顶级来源</label>
             <el-input
-              placeholder="请输入联盟顶级来源"
+              placeholder="请输入顶级来源"
               prefix-icon="el-icon-search"
               v-model="queryInfoParams.lmadvtoptype"
               maxlength="100"
@@ -227,9 +227,9 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">联盟广告类型 环球</label>
+            <label class="search-title">类型</label>
             <el-input
-              placeholder="请输入联盟广告类型 环球"
+              placeholder="请输入类型"
               prefix-icon="el-icon-search"
               v-model="queryInfoParams.lmadvtype"
               maxlength="100"
@@ -244,9 +244,9 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">联盟二级分类</label>
+            <label class="search-title">二级分类</label>
             <el-input
-              placeholder="请输入联盟二级分类"
+              placeholder="请输入二级分类"
               prefix-icon="el-icon-search"
               v-model="queryInfoParams.lmadvitem"
               maxlength="100"
@@ -261,9 +261,9 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">联盟广告编码</label>
+            <label class="search-title">编码</label>
             <el-input
-              placeholder="请输入联盟广告编码"
+              placeholder="请输入编码"
               prefix-icon="el-icon-search"
               v-model="queryInfoParams.lmadvcode"
               maxlength="100"
@@ -278,9 +278,9 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">联盟广告引用编码</label>
+            <label class="search-title">引用编码</label>
             <el-input
-              placeholder="请输入联盟广告引用编码"
+              placeholder="请输入引用编码"
               prefix-icon="el-icon-search"
               v-model="queryInfoParams.lmadvimport"
               maxlength="200"
@@ -295,11 +295,11 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">广告形式 0:3图;1:小图;2:大图</label>
+            <label class="search-title">形式</label>
             <el-input
               v-model="queryInfoParams.advtype"
               type="number"
-              placeholder="请输入广告形式 0:3图;1:小图;2:大图"
+              placeholder="请输入形式"
               prefix-icon="el-icon-search"
               clearable
             ></el-input> </el-col
@@ -327,11 +327,11 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">状态 0:停用;1:启用;2:已分配</label>
+            <label class="search-title">状态</label>
             <el-input
               v-model="queryInfoParams.flagstatus"
               type="number"
-              placeholder="请输入状态 0:停用;1:启用;2:已分配"
+              placeholder="请输入状态"
               prefix-icon="el-icon-search"
               clearable
             ></el-input> </el-col
@@ -343,11 +343,11 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">是否公用 0:否;1:是;</label>
+            <label class="search-title">是否公用</label>
             <el-input
               v-model="queryInfoParams.flagpublic"
               type="number"
-              placeholder="请输入是否公用 0:否;1:是;"
+              placeholder="请输入是否公用"
               prefix-icon="el-icon-search"
               clearable
             ></el-input> </el-col
@@ -376,9 +376,9 @@ will generate a vue page contains a table with all database columns and contains
             :xl="6"
             class="search-item"
           >
-            <label class="search-title">联盟广告获取收益编码</label>
+            <label class="search-title">获取收益编码</label>
             <el-input
-              placeholder="请输入联盟广告获取收益编码"
+              placeholder="请输入获取收益编码"
               prefix-icon="el-icon-search"
               v-model="queryInfoParams.lmadvapikey"
               maxlength="100"
@@ -466,42 +466,42 @@ will generate a vue page contains a table with all database columns and contains
         ></el-table-column>
         <el-table-column
           prop="lmadvname"
-          label="广告配置名称"
+          label="配置名称"
           sortable
         ></el-table-column>
         <el-table-column
           prop="lmadvsystemid"
-          label="联盟分类id"
+          label="分类id"
           sortable
         ></el-table-column>
         <el-table-column
           prop="lmadvtoptype"
-          label="联盟顶级来源"
+          label="顶级来源"
           sortable
         ></el-table-column>
         <el-table-column
           prop="lmadvtype"
-          label="联盟广告类型 环球"
+          label="类型"
           sortable
         ></el-table-column>
         <el-table-column
           prop="lmadvitem"
-          label="联盟二级分类"
+          label="二级分类"
           sortable
         ></el-table-column>
         <el-table-column
           prop="lmadvcode"
-          label="联盟广告编码"
+          label="编码"
           sortable
         ></el-table-column>
         <el-table-column
           prop="lmadvimport"
-          label="联盟广告引用编码"
+          label="引用编码"
           sortable
         ></el-table-column>
         <el-table-column
           prop="advtype"
-          label="广告形式 0:3图;1:小图;2:大图"
+          label="形式"
           sortable
         ></el-table-column>
         <el-table-column
@@ -511,12 +511,12 @@ will generate a vue page contains a table with all database columns and contains
         ></el-table-column>
         <el-table-column
           prop="flagstatus"
-          label="状态 0:停用;1:启用;2:已分配"
+          label="状态"
           sortable
         ></el-table-column>
         <el-table-column
           prop="flagpublic"
-          label="是否公用 0:否;1:是;"
+          label="是否公用"
           sortable
         ></el-table-column>
         <el-table-column prop="createtime" label="创建时间">
@@ -530,7 +530,7 @@ will generate a vue page contains a table with all database columns and contains
         ><el-table-column prop="remark" label="备注" sortable></el-table-column>
         <el-table-column
           prop="lmadvapikey"
-          label="联盟广告获取收益编码"
+          label="获取收益编码"
           sortable
         ></el-table-column>
         <el-table-column
@@ -723,7 +723,7 @@ export default {
 
 ### vue item
 will generate a vue page contains a form with all database columns exclude primary key and createtime and lastmodifytime.
-将会生成vue的编辑页面，包含所有字段（除主键、createtime、lastmodifytime），其中createtime、lastmodifytime可以在ignoreGenerateTheseColumnsInVue中配置
+将会生成vue的编辑页面，包含所有字段（除主键、createtime、lastmodifytime），其中createtime、lastmodifytime可以在ignoreGenerateTheseColumnsInVue中配置。input默认区分text\number\date类型输入框。
 页面效果
 ![Image text](images/item.png)
 ```
