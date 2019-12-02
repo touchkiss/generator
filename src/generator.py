@@ -111,6 +111,7 @@ if __name__ == '__main__':
         url = 'router.register(r\'^' + path + '/' + tableinfo.class_name + '\', ' + tableinfo.class_name + 'ViewSet)'
         print(url)
     print('\n\n\n')
+    print('vue routers and menu:\n\n')
     for path in tablesMap:
         tbs = tablesMap[path]
         fullpath = rootpath + 'python\\' + path
@@ -152,7 +153,7 @@ if __name__ == '__main__':
         fullpath = rootpath + 'vue\\' + path
         if not os.path.isdir(fullpath):
             os.makedirs(fullpath)
-
+        # 生成element admin template menu list：
         print('{')
         print('    text: \'' + path + '\',')
         print('    type: \'ios-paper\',')
@@ -189,6 +190,7 @@ if __name__ == '__main__':
                     template.render(path=path,
                                     table=table))
                 modelsfile.close()
+            # 生成vue routers
             print(table.title_name + 'List: {')
             print('    path: \'' + path + '/' + table.title_name + 'List\',')
             print('    name: \'' + table.title_name + 'List\',')
