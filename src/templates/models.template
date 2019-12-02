@@ -1,0 +1,11 @@
+__author__ = 'touchkiss'
+from django.db import models
+{% for table in tables %}
+class {{ table.class_name }}(models.Model):
+{% for column in table.columns %}    {{ column.column_name }} = models.{{ 'AutoField' if column.pri else column.model_field_name }}({{ 'primary_key=True, ' if column.pri }}{{ ('max_digits='+column.max_digits+', ') if column.max_digits and column.max_digits != '' }}{{ 'decimal_places='+column.decimal_places+', ' if column.decimal_places and column.decimal_places != '' }}{{ ('max_length='+column.max_length +', ') if column.max_length and column.max_length != '' and column.model_field_name == 'CharField'}}null={{ 'True' if column.nullable == 'YES' else 'False' }}, verbose_name='{{ column.verbose_name }}')
+{% endfor %}
+    class Meta:
+        managed = False
+        ordering = ['-{{ table.columns[0].column_name }}']
+        db_table = '{{ table.table_name }}'
+{% endfor %}

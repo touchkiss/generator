@@ -1,0 +1,11 @@
+__author__ = 'touchkiss'
+import django_filters
+from {{ basepackage }}{{path}}.models import *
+{% for table in tables %}
+class {{table.class_name}}Filter(django_filters.rest_framework.FilterSet):
+{% for column in table.columns %}    {{ column.column_name }}=django_filters.{{ column.filter_name }}(field_name='{{ column.column_name }}')
+{% endfor %}
+    class Meta:
+        model = {{ table.class_name }}
+        fields = [{% for column in table.columns %}'{{ column.column_name }}'{{',' if not loop.last }}{% endfor %}]
+{% endfor %}

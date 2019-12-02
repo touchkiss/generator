@@ -1,0 +1,38 @@
+__author__ = 'touchkiss'
+import time
+
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import mixins, viewsets, filters
+
+from {{ basepackage }}{{ path }}.models import *
+from {{ basepackage }}{{ path }}.serializer import *
+from {{ basepackage }}{{ path }}.filters import *
+from {{ basepackage }}serializer import StandardRequestSetPagination
+{#
+class StandardRequestSetPagination(PageNumberPagination):
+    page_size=50
+    page_size_query_param = 'pagesize'
+    page_query_param = 'p'
+    max_page_size = 100 #}
+{% for table in tables %}
+class {{ table.class_name }}ViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    queryset = {{ table.class_name }}.objects.all()
+    serializer_class = {{ table.class_name }}Serializer
+    pagination_class = StandardRequestSetPagination
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_class = {{ table.class_name }}Filter
+    filterset_fields = [{% for column in table.columns %}'{{ column.column_name }}',{% endfor %}]
+    ordering_fields = '__all__'
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, args, kwargs)
+
+    def create(self, request, *args, **kwargs):
+        request.data['createtime']=int(time.time())
+        request.data['lastmodifytime']=int(time.time())
+        return super().create(request, args, kwargs)
+
+    def update(self, request, *args, **kwargs):
+        request.data['lastmodifytime']=int(time.time())
+        return super().update(request, args, kwargs)
+{% endfor %}

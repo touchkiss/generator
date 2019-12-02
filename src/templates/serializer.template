@@ -1,0 +1,16 @@
+__author__ = 'touchkiss'
+from rest_framework import serializers
+
+from {{ basepackage }}{{ path }}.models import *
+{% for table in tables %}
+class {{ table.class_name }}Serializer(serializers.Serializer):
+{% for column in table.columns %}   {{ column.column_name }} = serializers.{{ column.serializer_field_name }}({{ ('max_digits='+column.max_digits+', ') if column.max_digits and column.max_digits != '' }}{{ 'decimal_places='+column.decimal_places+', ' if column.decimal_places and column.decimal_places != '' }}{{ ('max_length='+column.max_length +', ') if column.max_length and column.max_length != '' and column.serializer_field_name == 'CharField'}}required={{ 'True' if column.nullable == 'NO' and not column.pri  else 'False'}})
+{% endfor %}
+   def create(self, validated_data):
+      {{ table.title_name }} = {{ table.class_name }}.objects.create(**validated_data)
+      return {{ table.title_name }}
+
+   def update(self, instance, validated_data):{% for column in table.columns %}{% if not loop.first and column.column_name != 'createtime' %}instance.{{ column.column_name }} = validated_data['{{ column.column_name }}']{% endif %}
+      {% endfor %}instance.save()
+      return instance
+{% endfor %}
