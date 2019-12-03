@@ -4,7 +4,7 @@ One key generate Django models\filter\serializer\views code and Vue item\list co
 ## notice
 This project is based on MySQLdb and jinja2.
 ```
-pip install MySQLdb
+pip install PyMySQL
 pip install jinja2
 ```
 ## Django models\filter\serializer\views generate
